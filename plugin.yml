@@ -1,0 +1,7 @@
+---
+name: MagicEnvironment
+version: 0.0.1
+main: SixpennyYard\MagicEnvironment\Loader
+api: 4.9.0
+src-namespace-prefix: SixpennyYard\MagicEnvironment
+...
