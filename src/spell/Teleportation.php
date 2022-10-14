@@ -14,12 +14,32 @@ class Teleportation {
     /**
      * @var array
      */
+    public static array $spell = [];
+
+    /**
+     * @var array
+     */
     public static array $teleportationMark = [];
 
     /**
      * @var array
      */
     public static array  $coordinateMark = [];
+
+    /**
+     * @param Player $player
+     * @return bool
+     */
+    public static function isTeleportationPower(Player $player): bool
+    {
+        if (isset(self::$spell[$player->getName()])){
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
     /**
      * @param Player $player
@@ -47,7 +67,7 @@ class Teleportation {
         self::$teleportationMark[$player->getName()] = $player->getName();
         self::$coordinateMark[$player->getName()] = $position;
 
-        Loader::getInstance()->getScheduler()->scheduleRepeatingTask(new FastTpParticle($player, $position), 20);
+        Loader::getInstance()->getScheduler()->scheduleRepeatingTask(new FastTpParticle($player, $position), 10);
         Loader::getInstance()->getScheduler()->scheduleDelayedTask(new ClosureTask(function () use($player): void
         {
             $player->sendMessage("§l[§cMagicEnvironment§r§l] §4Votre marque de téléportation viens de disparaitre !");
@@ -62,6 +82,7 @@ class Teleportation {
     public static function removeMark(Player $player): void
     {
         unset(self::$teleportationMark[$player->getName()]);
+        unset(self::$coordinateMark[$player->getName()]);
 
         Loader::getInstance()->getScheduler()->cancelAllTasks();
     }
@@ -70,7 +91,7 @@ class Teleportation {
      * @param Player $player
      * @return mixed
      */
-    public static function getMark(Player $player)
+    public static function getMark(Player $player): mixed
     {
         return self::$coordinateMark[$player->getName()];
     }
@@ -88,7 +109,27 @@ class Teleportation {
 
         if (self::hasTpMark($player))
         {
-            $player->teleport(new Vector3($x, $y, $z));
+            $player->teleport(new Vector3($x, $y + 1, $z));
+            self::removeMark($player);
         }
+    }
+
+    /**
+     * @param Player $player
+     * @return void
+     */
+    public static function removePower(Player $player): void
+    {
+        unset(self::$spell[$player->getName()]);
+        self::removeMark($player);
+    }
+
+    /**
+     * @param Player $player
+     * @return void
+     */
+    public static function addPower(Player $player): void
+    {
+        self::$spell[$player->getName()] = $player->getName();
     }
 }

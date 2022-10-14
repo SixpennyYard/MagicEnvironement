@@ -6,6 +6,7 @@ use pocketmine\player\Player;
 use pocketmine\math\Vector3;
 use pocketmine\scheduler\Task;
 use pocketmine\world\particle\RedstoneParticle;
+use pocketmine\world\particle\WaterParticle;
 use pocketmine\world\Position;
 
 class FastTpParticle extends Task
@@ -36,10 +37,25 @@ class FastTpParticle extends Task
     public function onRun(): void
     {
         $player = $this->player;
-        $x = $this->position->getX();
-        $y = $this->position->getY() + 1.5;
-        $z = $this->position->getZ();
+        $x = round($this->position->getX());
+        $y = $this->position->getY() + 1.3;
+        $z = round($this->position->getZ());
 
-        $player->getWorld()->addParticle(new Vector3($x, $y, $z), new RedstoneParticle());
+        $player->getWorld()->addParticle(new Vector3($x + 0.01, $y, $z + 0.01), new WaterParticle());
+        $player->getWorld()->addParticle(new Vector3($x, $y + 0.01, $z), new WaterParticle());
+        $player->getWorld()->addParticle(new Vector3($x, $y - 0.01, $z), new WaterParticle());
+        $player->getWorld()->addParticle(new Vector3($x, $y + 0.001, $z), new WaterParticle());
+        $player->getWorld()->addParticle(new Vector3($x, $y - 0.001, $z), new WaterParticle());
+        $player->getWorld()->addParticle(new Vector3($x - 0.01, $y, $z - 0.01), new WaterParticle());
+        $player->getWorld()->addParticle(new Vector3($x + 0.001, $y, $z + 0.001), new WaterParticle());
+        $player->getWorld()->addParticle(new Vector3($x - 0.001, $y, $z - 0.001), new WaterParticle());
+        $player->getWorld()->addParticle(new Vector3($x + 0.1, $y, $z + 0.1), new RedstoneParticle());
+        $player->getWorld()->addParticle(new Vector3($x + 0.2, $y, $z + 0.2), new RedstoneParticle());
+        $player->getWorld()->addParticle(new Vector3($x + 0.3, $y, $z + 0.3), new RedstoneParticle());
+        $player->getWorld()->addParticle(new Vector3($x - 0.1, $y, $z - 0.1), new RedstoneParticle());
+        $player->getWorld()->addParticle(new Vector3($x - 0.2, $y, $z - 0.2), new RedstoneParticle());
+        $player->getWorld()->addParticle(new Vector3($x - 0.3, $y, $z - 0.3), new RedstoneParticle());
+        $player->getWorld()->addParticle(new Vector3($x, $y + 0.1, $z), new RedstoneParticle());
+        $player->getWorld()->addParticle(new Vector3($x, $y - 0.1, $z), new RedstoneParticle());
     }
 }

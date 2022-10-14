@@ -134,9 +134,6 @@ class PlayerListener implements Listener
             $rand4 = mt_rand(1, 1000);
             if ($rand == 34 or $rand == 41)
             {
-                $mana = $plconfig->get('mana') + 10;
-                $spell = $plconfig->get('max_spell') + 1;
-
                 $plconfig->setAll(self::HALF_ELF);
                 $plconfig->save();
 
@@ -199,24 +196,33 @@ class PlayerListener implements Listener
         if ($event->getAction() === PlayerInteractEvent::RIGHT_CLICK_BLOCK)
         {
 
-            $config = new Config(Loader::getInstance()->getDataFolder() . "player/{$player->getName()}.yml", Config::YAML);
-
-            foreach ($config->get("spell") as $spell)
+            if ($player->getInventory()->getItemInHand()->getId() == 0)
             {
-                if ($spell == Spell::TELEPORTATION[0]) {
-                    $player->sendMessage("33333");
-                    if (!Teleportation::hasTpMark($player)) {
-                        $position = new Position($block->getPosition()->getX(), $block->getPosition()->getY(), $block->getPosition()->getZ(), $block->getPosition()->getWorld());
-                        Teleportation::addMark($player, $position);
-                    } else {
-                        Teleportation::removeMark($player);
+
+                $config = new Config(Loader::getInstance()->getDataFolder() . "player/{$player->getName()}.yml", Config::YAML);
+
+                if (Teleportation::isTeleportationPower($player)) {
+                    foreach ($config->get("spell") as $spell) {
+                        if ($spell == Spell::TELEPORTATION[0]) {
+                            if (!Teleportation::hasTpMark($player)) {
+                                $position = new Position($block->getPosition()->getX(), $block->getPosition()->getY(), $block->getPosition()->getZ(), $block->getPosition()->getWorld());
+                                Teleportation::addMark($player, $position);
+                            } else {
+                                Teleportation::removeMark($player);
+                            }
+                            break;
+                        }
                     }
-                    break;
                 }
             }
         }elseif ($event->getAction() === PlayerInteractEvent::LEFT_CLICK_BLOCK)
         {
-
+            if ($player->getInventory()->getItemInHand()->getId() == 0)
+            {
+                if (Teleportation::hasTpMark($player)) {
+                    Teleportation::tpMark($player);
+                }
+            }
         }
     }
 

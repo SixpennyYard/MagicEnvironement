@@ -8,8 +8,6 @@ use SixpennyYard\MagicEnvironment\spell\Teleportation;
 class Loader extends PluginBase
 {
 
-    public ?Teleportation $teleportation;
-
     /**
      * @var Loader
      */
@@ -33,6 +31,7 @@ class Loader extends PluginBase
         @mkdir($this->getDataFolder() . "player/");
 
         $this->getServer()->getPluginManager()->registerEvents(new event\PlayerListener(), $this);
+        $this->getServer()->getCommandMap()->register('SpellInterface', new command\SpellCommand($this));
 
     }
 
