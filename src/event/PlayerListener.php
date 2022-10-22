@@ -122,6 +122,7 @@ class PlayerListener implements Listener
     public function onJoin(PlayerJoinEvent $event): void
     {
         $player = $event->getPlayer();
+        $this->player = $player;
 
         if (!$player->hasPlayedBefore())
         {
