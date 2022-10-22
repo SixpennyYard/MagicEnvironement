@@ -226,4 +226,17 @@ class PlayerListener implements Listener
         }
     }
 
+    public function handleUseItemTransaction(UseItemTransactionData $data) : void
+    {
+        if ($data->getActionType() == UseItemTransactionData::ACTION_CLICK_AIR)
+        {
+            if ($player->getInventory()->getItemInHand()->getId() == 0)
+            {
+                if (Teleportation::hasTpMark($player)) {
+                    Teleportation::tpMark($player);
+                }
+            }
+        }
+    }
+
 }
