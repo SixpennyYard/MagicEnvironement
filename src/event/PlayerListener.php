@@ -18,6 +18,8 @@ use SixpennyYard\MagicEnvironment\Utils\Spell;
 class PlayerListener implements Listener
 {
 
+    public Player $player;
+
     const HALF_ELF = [
         "exp" => 0,
         "health" => Level::LEVEL_1[1],
@@ -207,6 +209,7 @@ class PlayerListener implements Listener
                             if (!Teleportation::hasTpMark($player)) {
                                 $position = new Position($block->getPosition()->getX(), $block->getPosition()->getY(), $block->getPosition()->getZ(), $block->getPosition()->getWorld());
                                 Teleportation::addMark($player, $position);
+                                $this->player = $player;
                             } else {
                                 Teleportation::removeMark($player);
                             }
@@ -223,6 +226,9 @@ class PlayerListener implements Listener
                     Teleportation::tpMark($player);
                 }
             }
+        }else
+        {
+            $this->player = $player;
         }
     }
 
@@ -230,10 +236,10 @@ class PlayerListener implements Listener
     {
         if ($data->getActionType() == UseItemTransactionData::ACTION_CLICK_AIR)
         {
-            if ($player->getInventory()->getItemInHand()->getId() == 0)
+            if ($this->player->getInventory()->getItemInHand()->getId() == 0)
             {
-                if (Teleportation::hasTpMark($player)) {
-                    Teleportation::tpMark($player);
+                if (Teleportation::hasTpMark($this->player)) {
+                    Teleportation::tpMark($this->player);
                 }
             }
         }
